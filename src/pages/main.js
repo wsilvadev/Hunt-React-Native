@@ -1,45 +1,51 @@
 import api from '../services/api'
 import React, {Component} from 'react';
 import {
-    Text,View,FlatList
+    Text,View,FlatList,TouchableOpacity
 } from 'react-native';
-
-state = {
-
-    docs:[],
-};
+import Style from './style'
 export default class Main extends Component{
-static navigationOptions ={
-    title: 'JSHunte',
-}
+    static navigationOptions ={
+        title: 'JSHunte',
+    };
+    
+    state = {
+           docs:[]
+    };
 
 componentDidMount(){
     this.loadProducts();
 }
  loadProducts = async () =>{
     const response = await api.get('/products');
-
     const{docs} = response.data;
-console.log(docs)
-    this.setState({docs: this.state.docs});
+    
+    this.setState({docs});
 
 }
-renderItem = ({item}) =>(
-    <View>
-    <Text>{item.title}</Text>
-    <Text>{item.description}</Text>
+renderItem = ({item}) =>{
+    return (
+        <View style = {Style.productContainer}>
+            <Text style = {Style.productTitle}>{item.title}</Text>
+            <Text style = {Style.productDescription}>{item.description}</Text>
+            <TouchableOpacity style = {Style.productButton} onPress = {()=>{}} >
+                <Text style = {Style.productButtonText}>Acessar</Text>
+            </TouchableOpacity>
 
-    </View>
-)
+            
+        </View>
+    )
+}
+
     render(){
         return(
-            <View>
-                <FlatList
-                data={this.state.title}
-                keyExtractor={item =>  item._id}
-                renderItem={this.renderItem}
+            <View style = {Style.container}>
+                <FlatList 
+                contentContainerStyle = {Style.list}
+                data = {this.state.docs}
+                keyExtractor ={item => item._id}
+                renderItem = {this.renderItem}
                 />
-
             </View>
         );
     }
